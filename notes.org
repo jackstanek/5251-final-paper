@@ -1,0 +1,9 @@
+* Notes for 5251 final paper
+** Lempel-Ziv algorithm
+    - L_s is the maximum length of codewords, L_c is the fixed length
+      of decoded symbols (i.e. ASCII, bytes, etc)
+*** Encoding process
+    The process of encoding is essentially taking the series of input
+    words and assigning a codeword to each one.
+    1. Append n - L_s zeros to the beginning of the word in the buffer.
+    2.

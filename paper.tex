@@ -1,0 +1,111 @@
+% MATH 5251 Final paper.
+
+\documentclass[12pt]{article}
+
+\usepackage{graphicx}
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage{tikz}
+
+\textwidth = 7 in
+\textheight = 9.5 in
+\oddsidemargin = -0.3 in
+\evensidemargin = -0.3 in
+\topmargin = -0.4 in
+\headheight = 0.0 in
+\headsep = 0.0 in
+\parskip = 0.2in
+\parindent = 0.0in
+
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{prop}{Proposition}
+\newtheorem{defn}{Definition}[section]
+
+\title{A Review of Data Compression Methods}
+\author{Anonymous}
+
+\begin{document}
+\maketitle
+
+In the age of ever-expanding quantities of digital data, the ability
+to store this data efficiently is more important than ever. Throughout
+the history of the field of computer science, various algorithms of
+varying complexities and efficacies have been created in order to
+reduce the amount of space required to store arbitrary strings of
+binary data. This wide variety of methods are optimized for different
+purposes: some algorithms attempt to reduce the amount of space
+required to store raster images; some try to optimize audio storage;
+some can optimize genetic data to an extremely high degree; and still
+more attempt to work well for general-purpose use. Within the scope of
+this paper, I will attempt to give an overview of a handful of popular
+compression schemes, including general purpose as well domain-specific
+methods, as well as a theoretical overview of the limits and potential
+benefits of compression in general. This paper will only cover
+lossless data encoding: that is, alogrithms which can reproduce a
+perfect copy of the input data from its output. Lossy compression
+schemes exist which can achieve incredible compression ratios, but
+their methods typically include psychological ``tricks'' which allows
+the algorithm to discard data which is less noticable to human
+senses. As such, these methods are outside the scope of this paper.
+
+\section{Theoretical Limits to Data Compression}
+
+Data compression has many benefits as quickly reviewed above; however,
+many limitations also exist. Note that for simplicity, we will limit
+our discussion of compression schemes to binary schemes, as these are
+the most wide spread in applications in the real world (i.e.,
+compression of computer files.)
+
+\begin{thm}
+  For any given data compression scheme, there exist some input
+  whose output is not shorter than its input. That is to say, there is
+  no compression scheme which can compress every input bit-string.
+\end{thm}
+
+\begin{proof}
+  Informally, we can describe a ``perfect compression scheme'' as some
+  mapping which uniquely maps a given input bit-string to an output
+  bit-string of strictly lesser length. More formally, a perfect
+  compression scheme can be modeled as a function which maps input
+  bit-strings to output bitstrings which are shorter. For any
+  $n \in \mathbb{N}$, let $S_n$ be the set of bit-strings of length
+  $n$, and let $T_n = \bigcup_{k = 1}^{n - 1} S_k$; that is, $T_n$ is
+  the ``target'' set of bit-strings which are of lengths are strictly
+  less than $n$. Suppose that there exists some ``perfect''
+  compression scheme $C:S_n \to T_n$. The set $S_n$ has $2^n$ elements
+  and $T_n$ has $\sum_{k=1}^{n-1}2^k = 2^n - 2$ elements. Since
+  $2^n > 2^n - 2$, by the pigeonhole principle there must be at least
+  one element in $T_n$ such that two distinct elements in $S_n$ map to
+  this element through $C$. However, $C$ is defined to be a function,
+  so this is a contradiction, and thus such a function $C$ can not
+  exist.
+\end{proof}
+
+This result is not to say that compression is impossible; on the
+contrary! It is very possible for a compression scheme to reduce
+\emph{on average} the length of its inputs.
+
+\section{Huffman Codes}
+
+\begin{thm}
+  This is a theorem.
+\end{thm}
+
+\begin{proof}
+This is a proof.
+\end{proof}
+
+The equation $y=x$ is an in-line equation.
+
+The equation
+\[
+y=x
+\]
+is a display style equation.
+
+\section{Lempel-Ziv Based Methods}
+
+If there's anything you don't know how to do with \LaTeX{}, try
+googling it. If you still can't figure it out, email me.
+
+\end{document}
