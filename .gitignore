@@ -3,3 +3,8 @@ _region_*
 *.log
 *.dvi
 *.pdf
+*.bbl
+*.bib-stamp
+*.blg
+*.out
+*.ps
