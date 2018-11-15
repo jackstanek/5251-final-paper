@@ -6,6 +6,7 @@
 \usepackage{amssymb, amsmath, amsthm, amsfonts}
 \usepackage{tikz}
 \usepackage[pdfusetitle]{hyperref}
+\usepackage{apacite}
 
 \textwidth = 7 in
 \textheight = 9.5 in
@@ -117,20 +118,36 @@ compressable, and even uncompressable (since such an input must
 exist!) Since entropy of some channel $X$ with an alphabet $C$ is
 defined to be $H(X) = -\sum_{c \in C} P(c)\log_2{c}$, we can
 illustrate the implications of this result with a simple
-example. Clearly for a channel using binary alphabet (i.e.,
-$C = \{0, 1\}$) with a uniform distribution of 1s and 0s, the entropy
-of this channel is $H(X) = -2 * \frac{1}{2}\log_2{\frac{1}{2}} = 1$,
-so some optimal prefix code must have an average word length greater
-than or equal to 1; obviously, the simplest prefix code to encode
-$\{0, 1\}$ is $\{0, 1\}$ itself. Thus, a this channel is
-incompressible.
+example. Suppose we are attempting to compress a particular channel
+$X$ which is text document in which the frequencies of every letter of
+the Latin alphabet are distributed equally. (It is extremely unlikely
+that a text in any human language would have this property; it is used
+here to illustrate a pathological edge case in general.) Then the
+average word length must be greater than
+$26 * -\frac{1}{26} \log_2{\frac{1}{26}} \approx 4.7$ bits. If we were
+to construct a naive code to encode the Latin alphabet, for instance
+$A=1, B=2,...$, we would require 5 bits for each letter. Shannon's
+Noiseless Coding Theorem says this is more or less as good as we can
+do, so for this case it is very difficult to actually compress our
+input. Consider another document in which case one letter, let's say
+$E$, occurs significantly more often than the others, for instance
+$\frac{27}{52}$ of the time, relative to $\frac{1}{52}$ for every
+other letter. Then by Shannon's Noiseless Coding Theorem, it is
+possible to construct a code with an average word length greater than
+$25 * -\frac{1}{52} \log_2{\frac{1}{52}} - \frac{27}{52}
+\log_2{\frac{27}{25}} \approx 3.2$, meaning that we can compress such
+this document approximately $33\%$ more efficiently than the uniform
+one. This situation is somewhat contrived, but it serves to illustrate
+the fundamental limits of prefix codes in general.
 
 \section{Lempel-Ziv Based Methods}
 
-The Lempel-Ziv compression algorithm, or simply LZ for short, is one
-of the most widespread compression schemes in use, when including its
-large family of derivative methods. It was first introduced in 1977 in
-\cite{LempelZiv}.
+The Lempel-Ziv compression algorithm, commonly referred to as LZ for
+short, is one of the most widespread compression schemes in use,
+especially when including its large family of derivative methods. It
+was first introduced in 1977. \cite{LempelZiv} Algorithms based on
+the Lempel-Ziv algorithms are very efficient and work well with a wide
+variety of inputs.
 
 \section{The Free Lossless Audio Codec}
 
@@ -142,7 +159,7 @@ describe the structure and function of the Free Lossless Audio Codec,
 known more commonly by its acronym FLAC, a popular format for
 high-fidelity audio storage.
 
-\bibliography{biblio}{}
-\bibliographystyle{plain}
+\bibliographystyle{apacite}
+\bibliography{biblio}
 
 \end{document}
