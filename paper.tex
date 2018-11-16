@@ -24,7 +24,7 @@
 \newtheorem{defn}{Definition}[section]
 
 \title{A Review of Lossless Data Compression Methods}
-\author{Anonymous}
+\author{Blargh}
 
 \begin{document}
 \maketitle
@@ -125,7 +125,7 @@ that a text in any human language would have this property; it is used
 here to illustrate a pathological edge case in general.) Then the
 average word length must be greater than
 $26 * -\frac{1}{26} \log_2{\frac{1}{26}} \approx 4.7$ bits. If we were
-to construct a naive code to encode the Latin alphabet, for instance
+to construct a naïve code to encode the Latin alphabet, for instance
 $A=1, B=2,...$, we would require 5 bits for each letter. Shannon's
 Noiseless Coding Theorem says this is more or less as good as we can
 do, so for this case it is very difficult to actually compress our
@@ -133,28 +133,43 @@ input. Consider another document in which case one letter, let's say
 $E$, occurs significantly more often than the others, for instance
 $\frac{27}{52}$ of the time, relative to $\frac{1}{52}$ for every
 other letter. Then by Shannon's Noiseless Coding Theorem, it is
-possible to construct a code with an average word length greater than
+possible to construct a prefix code with an average word length
+greater than
 $25 * -\frac{1}{52} \log_2{\frac{1}{52}} - \frac{27}{52}
 \log_2{\frac{27}{25}} \approx 3.2$, meaning that we can compress such
 this document approximately $33\%$ more efficiently than the uniform
 one. This situation is somewhat contrived, but it serves to illustrate
 the fundamental limits of prefix codes in general.
 
+Prefix codes on their own are extremely useful in communication
+applications, but their true power is revealed when used as a building
+block within more powerful, sophisticated compression schemes.
+
 \section{Lempel-Ziv Based Methods}
 
-The Lempel-Ziv compression algorithm, commonly referred to as LZ for
-short, is one of the most widespread compression schemes in use,
-especially when including its large family of derivative methods. It
-was first introduced in 1977. \cite{LempelZiv} Algorithms based on
-the Lempel-Ziv algorithms are very efficient and work well with a wide
-variety of inputs.
+The Lempel-Ziv compression algorithm, commonly referred to as LZ77 or
+LZ78 for short, is one of the most widespread compression schemes in
+use, especially when including its large family of derivative
+methods. It was first introduced in 1977. \cite{LempelZiv} Algorithms
+based on the Lempel-Ziv algorithms are relatively efficient and work
+well with a wide variety of inputs.
+
+The algorithm is based on a dictionary-style approach; that is to say,
+it creates a dictionary of codewords within the input bit-string
+as the algorithm progresses.
+
+\subsection{Lempel-Ziv-Welch}
+
+The Lempel-Ziv-Welch compression algorithm was an extension of the
+Lempel-Ziv algorithm which was introduced soon after the publication
+of the original LZ77. \cite{LempelZivWelch}
 
 \section{The Free Lossless Audio Codec}
 
 Since knowing the structure of a given input can allow the
 construction of a more efficient data compression scheme, it is
 worthwhile to study some compression scheme which is specifically
-designed to store a particular type of data. In this section I will
+designed to store a particular type of data. In this secion I will
 describe the structure and function of the Free Lossless Audio Codec,
 known more commonly by its acronym FLAC, a popular format for
 high-fidelity audio storage.
