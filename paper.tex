@@ -4,8 +4,10 @@
 
 \usepackage{graphicx}
 \usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage{thmtools}
 \usepackage{tikz}
 \usepackage[pdfusetitle]{hyperref}
+\usepackage{cleveref}
 \usepackage{apacite}
 
 \textwidth = 7 in
@@ -18,13 +20,10 @@
 \parskip = 0.2in
 \parindent = 0.0in
 
-\newtheorem{thm}{Theorem}[section]
-\newtheorem{cor}[thm]{Corollary}
-\newtheorem{prop}{Proposition}
-\newtheorem{defn}{Definition}[section]
+\declaretheorem[numberwithin=section]{Theorem}
 
 \title{A Review of Lossless Data Compression Methods}
-\author{Blargh}
+\author{Citoyen}
 
 \begin{document}
 \maketitle
@@ -61,12 +60,13 @@ compression of computer files.) The first limitation we shall discuss
 is the impossibility of a universally applicable, or ``perfect,''
 compression scheme.
 
-\begin{thm}
+\begin{Theorem}
+  \label{imperfect-compression}
   For any given data compression scheme, there exists at least one
   arbitrary input data whose ``compressed'' form is not strictly
   shorter than it. That is to say, there is no compression scheme
   which can compress every potential input.
-\end{thm}
+\end{Theorem}
 
 \begin{proof}
   Informally, we can describe a ``perfect compression scheme'' as some
@@ -103,10 +103,11 @@ replacing each instance of this input with a shorter ``prefix code.''
 Intuitively, this suggests that data with a regular structure is more
 amenable to compression than more random, unpredictable data.
 
-\begin{thm}
+\begin{Theorem}
+  \label{snct}
   The average word length of an optimal prefix code for a given source
   is greater than or equal to the entropy of that source.
-\end{thm}
+\end{Theorem}
 
 \begin{proof}
   A proof of this theorem can be found in \cite{Shannon}.
@@ -175,12 +176,15 @@ form will consist of zero-length prefixes followed by the input
 character literals.)
 
 The basic method introduced in Lempel and Ziv's original paper is
-vulnerable to some significant drawbacks. Since each individual byte
-in the input can take up at most three bytes in the output, it is
-possible that some pathological input data can have a compressed form
-which is substantially larger, especially if the sliding window is
-small. As such, this suggests a good jumping-off point for creating
-improvements upon the original algorithm.
+vulnerable to some significant drawbacks. For instance, since each
+individual byte in the input can take up at most three bytes in the
+output, it is possible that some pathological input data can have a
+compressed form which is substantially larger, especially if the
+sliding window is small. (Clearly, a highly entropic input is much
+more likely to have fewer recurring prefixes within any given sliding
+window, which is consistent with our result from
+\Cref{imperfect-compression}) As such, this suggests a good jumping-off
+point for creating improvements upon the original algorithm.
 
 \subsection{Lempel-Ziv-Welch}
 
