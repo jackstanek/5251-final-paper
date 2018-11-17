@@ -148,21 +148,52 @@ block within more powerful, sophisticated compression schemes.
 \section{Lempel-Ziv Based Methods}
 
 The Lempel-Ziv compression algorithm, commonly referred to as LZ77 or
-LZ78 for short, is one of the most widespread compression schemes in
-use, especially when including its large family of derivative
-methods. It was first introduced in 1977. \cite{LempelZiv} Algorithms
-based on the Lempel-Ziv algorithms are relatively efficient and work
-well with a wide variety of inputs.
+LZ78, or even simply LZ for short, is one of the most widespread
+compression schemes in use, especially when including its large family
+of derivative methods. It was first introduced in
+1977. \cite{LempelZiv} Algorithms based on the Lempel-Ziv algorithms
+are relatively efficient and work well with a wide variety of inputs.
 
 The algorithm is based on a dictionary-style approach; that is to say,
-it creates a dictionary of codewords within the input bit-string
-as the algorithm progresses.
+it creates a dictionary of codewords within the input data as the
+algorithm progresses. Lempel-Ziv uses a ``sliding-window'' technique
+to construct its dictionary. For each set of bytes it attempts to
+compress, it inspects its sliding window, which extends some set
+amount behind the bytes under consideration. In this way, the
+algorithm builds a prefix code as it proceeds through the file. A
+``prefix'' can be one or more characters long. For each point in the
+input data, the algorithm consults the prefix table of prefixes
+contained in the sliding window, which is a set amount of data prior
+to the current point. If the current prefix is found in the prefix
+table, the algorithm outputs a data triplet indicating how far back in
+the window the prefix occurred, the length of the prefix, and finally
+the character which comes after the prefix. This means that the very
+first characters in the input data will be encoded as 1-character
+prefixes. (For our very first characters in the input data, since
+there can't be any prefixes in the sliding window yet, the encoded
+form will consist of zero-length prefixes followed by the input
+character literals.)
+
+The basic method introduced in Lempel and Ziv's original paper is
+vulnerable to some significant drawbacks. Since each individual byte
+in the input can take up at most three bytes in the output, it is
+possible that some pathological input data can have a compressed form
+which is substantially larger, especially if the sliding window is
+small. As such, this suggests a good jumping-off point for creating
+improvements upon the original algorithm.
 
 \subsection{Lempel-Ziv-Welch}
 
 The Lempel-Ziv-Welch compression algorithm was an extension of the
 Lempel-Ziv algorithm which was introduced soon after the publication
-of the original LZ77. \cite{LempelZivWelch}
+of the original LZ77. \cite{LempelZivWelch} The LZW variant is
+extremely widespread in applications; for instance, one of its many
+uses is as part of the GIF image format.
+
+\subsection{DEFLATE}
+
+Another algorithm based on the Lempel-Ziv foundation is the DEFLATE
+algorithm, codified in RFC 1951. \cite{RFC1951}
 
 \section{The Free Lossless Audio Codec}
 
