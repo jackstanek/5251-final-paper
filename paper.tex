@@ -23,7 +23,7 @@
 \declaretheorem[numberwithin=section]{Theorem}
 
 \title{A Review of Lossless Data Compression Methods}
-\author{Citoyen}
+\author{someone idk}
 
 \begin{document}
 \maketitle
@@ -182,23 +182,71 @@ output, it is possible that some pathological input data can have a
 compressed form which is substantially larger, especially if the
 sliding window is small. (Clearly, a highly entropic input is much
 more likely to have fewer recurring prefixes within any given sliding
-window, which is consistent with our result from
-\Cref{imperfect-compression}.) As such, these drawbacks suggest a good
-jumping-off point for creating improvements upon the original
-algorithm.
+window. Thus a prefix code based on such an output would have a higher
+average word length, which is consistent with our result from
+\Cref{snct}.) Another drawback of the LZ method is its performance;
+searching the sliding window for matches, as well as updating the
+window prefix list, can be an expensive operation. As such, these
+drawbacks suggest a good jumping-off point for creating improvements
+upon the original algorithm.
 
 \subsection{Lempel-Ziv-Welch}
 
-The Lempel-Ziv-Welch compression algorithm was an extension of the
+One such improvement was the Lempel-Ziv-Welch compression algorithm,
+commonly referred to as LZW. It was created as an extension of the
 Lempel-Ziv algorithm which was introduced soon after the publication
-of the original LZ77. \cite{LempelZivWelch} The LZW variant is
-extremely widespread in applications; for instance, one of its many
-uses is as part of the GIF image format.
+of the original LZ77. The LZW variant is extremely widespread in
+applications; for instance, one of its many uses is as part of the GIF
+image format. LZW's improvements upon the LZ algorithm are fairly
+straightforward, but they allow for significant improvements to the
+simplicity of implementation. According to the author, the LZW
+algorithm can take operate at a speed of three clock cycles (CPU
+instructions) per input symbol. \cite{LempelZivWelch}
+
+LZW is able to achieve this speed by using a single symbol table for
+the entire input, adaptively building up as the algorithm processes
+it. Instead of using a sliding window, LZW instead begins by
+initializing a string table with every single-character prefix. As it
+parses the input, it uses a greedy algorithm to match strings from the
+input to the strings already seen in the table. It does this by
+checking if some prefix in the input has already been seen in the
+table; if so, it appends the immediately next character from the input
+to the prefix and queries the string table again. If, on the other
+hand, the appended prefix is \emph{not} found, the algorithm outputs
+the code of the prefix \emph{without} the next character appended (the
+code for which is retrieved from the string table) and then adding the
+appended prefix to the string table. The prefix is set to the last
+character of the prefix and the process repeats.
+
+As we can see, the entire algorithm can be succinctly summarized in a
+few sentences and can also be (hopefully) easily understood. This
+characteristic makes it useful for implementers, and also has benefits
+in terms of performance. Since it uses a very simple process for
+encoding, it is able to greatly reduce the number of clock cycles
+needed for encoding or decoding each character. In addition, it is
+also simple to implement performance-enhancing features, such as using
+a tree data structure with hashing to store string prefixes, buffering
+the input data to conserve memory, and so forth. Drawbacks of the LZW
+method include lower compression ratios than other, more advanced
+methods. For instance, the author claims a ratio of 1.8 on English
+text, compared to a 2.4 ratio achieved by more sophisticated
+algorithms. \cite{LempelZivWelch}
+
+The LZ family of compression codes is massive, and LZW is just one
+single member. Another, possibly even more widespread variant is the
+DEFLATE algorithm.
 
 \subsection{DEFLATE}
 
 Another algorithm based on the Lempel-Ziv foundation is the DEFLATE
-algorithm, codified in RFC 1951. \cite{RFC1951}
+format, codified in RFC 1951. \cite{RFC1951} DEFLATE is not
+``standardized'' by any recognized governing body, though it is very
+widely used and has become a de facto standard by virtue of its use in
+the \texttt{gzip} compression utility, as well as in the ubiquitous
+\texttt{zlib} library. RFC 1951 specifies the technical minutia of the
+implementation of the file format, as well as its algorithm itself. As
+such, it is not useful to describe the full file format within this
+paper, only the algorithm will be outlined.
 
 \section{The Free Lossless Audio Codec}
 
