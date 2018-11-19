@@ -272,11 +272,32 @@ worthwhile to study some compression scheme which is specifically
 designed to store a particular type of data. In this secion I will
 describe the structure and function of the Free Lossless Audio Codec,
 known more commonly by its acronym FLAC, a popular format for
-high-fidelity audio storage.
+high-fidelity audio storage. \cite{flac}
+
+Since FLAC is designed exclusively for storing high-fidelity audio
+data, it is able to exploit characteristics specific to sound in order
+to achieve a better compression ratio than a simple general purpose
+compression scheme would be able to. For instance, FLAC's designers
+realize that stereo sound streams often correlate very closely. As
+such, FLAC allows the compressor to encode input in multiple ways;
+left and right can be encoded independently, or as ``mid'' and
+``side'' channels, where the mid channel is an average of the left and
+right channels and the side is the difference of the two. For highly
+correlated left/right channels, this encoding can result in
+significant lossless compression gains.
+
+The primary means of compression, however, is through model/residual
+coding. For each block of raw input, the FLAC compressor tries to fit
+the signal to a parameterized function, such as a polynomial for
+instance, and then stores the function. It then computes the
+residuals, or the differences between the raw audio signal and the
+parameterized function at each sample. This residual data has a
+particular distribution which is efficiently stored using a specific
+form of Huffman codes, called Rice codes. \cite{flac}
+
+
 
 \section{Conclusion}
-
-
 
 \bibliographystyle{apacite}
 \bibliography{biblio}
