@@ -23,17 +23,17 @@
 \declaretheorem[numberwithin=section]{Theorem}
 
 \title{A Review of Lossless Data Compression Methods}
-\author{someone idk}
+\author{5251 Student}
 
 \begin{document}
 \maketitle
 
 In the age of ever-expanding quantities of digital data, the ability
 to store this data efficiently is more important than ever. Throughout
-the history of the field of computer science, various algorithms of
-varying complexities and efficacies have been created in order to
-reduce the amount of space required to store arbitrary strings of
-binary data. This wide variety of methods are optimized for different
+the history of the field of computer science, algorithms of varying
+complexities and efficacies have been created in order to reduce the
+amount of space required to store arbitrary strings of binary
+data. This wide variety of methods are optimized for different
 purposes: some algorithms attempt to reduce the amount of space
 required to store raster images; some try to optimize audio storage;
 some can optimize genetic data to an extremely high degree; and still
@@ -295,9 +295,24 @@ parameterized function at each sample. This residual data has a
 particular distribution which is efficiently stored using a specific
 form of Huffman codes, called Rice codes. \cite{flac}
 
-
+The FLAC specification is of course much more detailed than this
+high-level overview, but a brief description of FLAC's methods is more
+than sufficient to demonstrate how exploiting characteristics of a
+particular data domain can lead to huge increases in compression
+efficiency.
 
 \section{Conclusion}
+
+Data compression methods can be used to reduce the amount of space
+required to store digital data. However, tradeoffs have to be made
+when compressing since it is impossible for an algorithm to be able to
+compress any arbitrary input; some input must result in an output of
+equal length. In addition, the compressability of an input is highly
+dependent on its entropy. Many different compression algorithms exist,
+the most common of which belong to the Lempel-Ziv family. Finally,
+many domain-specific algorithms exist to gain extra efficiency when
+applied to their particular domain. FLAC is one such algorithm which
+is used for lossless audio storage and transmission.
 
 \bibliographystyle{apacite}
 \bibliography{biblio}
