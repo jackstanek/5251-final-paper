@@ -194,8 +194,8 @@ upon the original algorithm.
 
 One such improvement was the Lempel-Ziv-Welch compression algorithm,
 commonly referred to as LZW. It was created as an extension of the
-Lempel-Ziv algorithm which was introduced soon after the publication
-of the original LZ77. The LZW variant is extremely widespread in
+Lempel-Ziv algorithm and was introduced soon after the publication of
+the original LZ77. The LZW variant is extremely widespread in
 applications; for instance, one of its many uses is as part of the GIF
 image format. LZW's improvements upon the LZ algorithm are fairly
 straightforward, but they allow for significant improvements to the
@@ -233,8 +233,8 @@ text, compared to a 2.4 ratio achieved by more sophisticated
 algorithms. \cite{LempelZivWelch}
 
 The LZ family of compression codes is massive, and LZW is just one
-single member. Another, possibly even more widespread variant is the
-DEFLATE algorithm.
+single member. Possibly even more widespread is the DEFLATE algorithm,
+used in many compressed file formats.
 
 \subsection{DEFLATE}
 
@@ -247,6 +247,22 @@ the \texttt{gzip} compression utility, as well as in the ubiquitous
 implementation of the file format, as well as its algorithm itself. As
 such, it is not useful to describe the full file format within this
 paper, only the algorithm will be outlined.
+
+In general, compression proceeds as follows: for a given block of data
+withint the input, the algorithm constructs a Huffman prefix coding
+for the input alphabet. Information about the prefix coding is then
+stored within the output block header, which contains metadata about the
+compressed output. DEFLATE supports ``fixed'' and ``dynamic'' Huffman
+codes. Fixed Huffman codes are defined in the DEFLATE specification
+and can be simply hard-coded in the compressor/decompressor
+software. Dynamic Huffman codes, on the other hand, are created by the
+compressor and their information is serialized and stored in the block
+header. The compressed data is then run through an implementation of
+the LZ77 algorithm from earlier.
+
+DEFLATE allows us to reap the benefits both of the the LZ77 algorithm
+as well as the more basic Huffman prefix coding scheme, all while
+using a more-or-less standardized file format for easy interchange.
 
 \section{The Free Lossless Audio Codec}
 
