@@ -8,3 +8,6 @@ _region_*
 *.blg
 *.out
 *.ps
+*.nav
+*.snm
+*.toc*

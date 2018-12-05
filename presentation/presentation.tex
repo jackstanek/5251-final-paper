@@ -1,0 +1,66 @@
+\documentclass[mathserif,notheorems]{beamer} % option notheorems
+\usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage{cleveref}
+\usepackage{thmtools}
+\usetheme{Berlin}
+\title{A Review of Lossless Data Compression Algorithms}
+\author{Jack Stanek}
+
+\declaretheorem[numberwithin=section]{Theorem}
+
+\begin{document}
+\begin{frame}
+  \titlepage
+\end{frame}
+
+\begin{frame}
+  \tableofcontents
+\end{frame}
+
+\begin{frame}
+  \section{A Brief Introduction to Data Compression}
+  \subsection{Informal Overview}
+  \frametitle{What is data compression?}
+
+  A data compression scheme refers to any system for reducing the
+  number of symbols required to represent arbitrary information.
+
+  Some commonplace (possibly lossy!) examples:
+
+  \begin{itemize}
+    \item \texttt{*.mp3} files
+    \item \texttt{*.zip} files
+    \item Abbreviations in writing
+  \end{itemize}
+
+  Clearly, this list is not exhaustive, but it provides an intuition
+  to how these systems function.
+\end{frame}
+
+\begin{frame}
+  \subsection{Theoretical Background}
+  Information can be represented as a series of symbols
+  \begin{itemize}
+    \item Text is a string of letters in langauge's alphabet
+    \item Numbers are strings of Arabic numerals
+  \end{itemize}
+  For some alphabet $\Sigma$, the set of all compression schemes
+  $C_\Sigma$ is the set of bijections
+  $c : \Sigma^n \to \bigcup_{k = 1}^{n} \Sigma^k$ for all
+  $n \in \mathbb{N}$ such that $n \geq 2$. A compression scheme is
+  considered ``perfect'' if and only if its image is the set of all
+  strings of length strictly less than that of the domain.
+\end{frame}
+
+\begin{frame}
+  \subsection{Impossibility of perfect compression}
+  \begin{Theorem}
+    No perfect compression scheme exists.
+  \end{Theorem}
+\end{frame}
+
+\begin{frame}
+
+\end{frame}
+
+\end{document}
