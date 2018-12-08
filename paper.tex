@@ -4,6 +4,8 @@
 
 \usepackage{graphicx}
 \usepackage{amssymb, amsmath, amsthm, amsfonts}
+\usepackage{algorithm}
+\usepackage[noend]{algpseudocode}
 \usepackage{thmtools}
 \usepackage{tikz}
 \usepackage[pdfusetitle]{hyperref}
@@ -23,7 +25,7 @@
 \declaretheorem[numberwithin=section]{Theorem}
 
 \title{A Review of Lossless Data Compression Methods}
-\author{5251 Student}
+\author{Jack Stanek}
 
 \begin{document}
 \maketitle
@@ -47,15 +49,15 @@ reproduce a perfect copy of the input data from its output. Lossy
 compression schemes exist which can achieve incredible compression
 ratios, but their methods typically include psychological ``tricks''
 which allows the algorithm to discard data which is less noticable to
-human senses. As such, these methods are outside the scope of this
-paper.
+human senses. As this is a mathematics paper and not a psychology
+paper, these methods are outside the scope of this document.
 
 \section{Theoretical Limits to Data Compression}
 
 Data compression has many benefits as quickly reviewed above; however,
 many limitations also exist. Note that for simplicity, we will limit
 our discussion of compression schemes to binary schemes, as these are
-the most wide spread in applications in the real world (i.e.,
+the most widespread in applications in the real world (i.e.,
 compression of computer files.) The first limitation we shall discuss
 is the impossibility of a universally applicable, or ``perfect,''
 compression scheme.
@@ -148,32 +150,54 @@ block within more powerful, sophisticated compression schemes.
 
 \section{Lempel-Ziv Based Methods}
 
-The Lempel-Ziv compression algorithm, commonly referred to as LZ77 or
-LZ78, or even simply LZ for short, is one of the most widespread
-compression schemes in use, especially when including its large family
-of derivative methods. It was first introduced in
-1977. \cite{LempelZiv} Algorithms based on the Lempel-Ziv algorithms
-are relatively efficient and work well with a wide variety of inputs.
+The Lempel-Ziv compression algorithm, introduced in two variations in
+1977 and 1978, is one of the most widespread compression schemes in
+use, especially when including its large family of derivative
+methods. Algorithms based on the Lempel-Ziv algorithms are relatively
+efficient and work well with a wide variety of inputs.
 
 The algorithm is based on a dictionary-style approach; that is to say,
 it creates a dictionary of codewords within the input data as the
-algorithm progresses. Lempel-Ziv uses a ``sliding-window'' technique
-to construct its dictionary. For each set of bytes it attempts to
-compress, it inspects its sliding window, which extends some set
-amount behind the bytes under consideration. In this way, the
-algorithm builds a prefix code as it proceeds through the file. A
-``prefix'' can be one or more characters long. For each point in the
-input data, the algorithm consults the prefix table of prefixes
-contained in the sliding window, which is a set amount of data prior
-to the current point. If the current prefix is found in the prefix
-table, the algorithm outputs a data triplet indicating how far back in
-the window the prefix occurred, the length of the prefix, and finally
-the character which comes after the prefix. This means that the very
-first characters in the input data will be encoded as 1-character
-prefixes. (For our very first characters in the input data, since
-there can't be any prefixes in the sliding window yet, the encoded
-form will consist of zero-length prefixes followed by the input
-character literals.)
+algorithm progresses. The LZ77 variant uses a ``sliding-window''
+technique to construct its dictionary as it compresses. \cite{lz77}
+For each set of bytes it attempts to compress, it inspects its sliding
+window, which extends some set amount behind the bytes under
+consideration. In this way, the algorithm builds a prefix code as it
+proceeds through the file. A ``prefix'' can be one or more characters
+long. For each point in the input data, the algorithm consults the
+prefix table of prefixes contained in the sliding window, which is a
+set amount of data prior to the current point. If the current prefix
+is found in the prefix table, the algorithm outputs a 3-tuple
+indicating how far back in the window the prefix occurred, the length
+of the prefix, and finally the character which comes after the
+prefix. This means that the very first characters in the input data
+will be encoded as 1-character prefixes. (For our very first
+characters in the input data, since there can't be any prefixes in the
+sliding window yet, the encoded form will consist of zero-length
+prefixes followed by the input character literals.)
+
+To illustrate: suppose we are to encode the string ``oodles of
+noodles'' using LZ77, with a window of length 8. The string is 16
+characters long, requiring 16 bytes to store. The current character is
+set to ``o'', the first character of the string. However, since there
+are two ``o'' characters in a row, the algorithm can ``overshoot'' the
+end of the window in order to efficiently implement run-length
+encoding (that is, recording a character and the number of copies
+folloiwng it.) Thus, \texttt{(2, 0, 'o')} is emitted, and the current
+character is incremented by two. The algorithm then emits
+single-character prefix 3-tuples for \texttt{d, l, e, s, ' ',} (the
+space character), \texttt{o}, and \texttt{f}. At
+
+The LZ78 algorithm is functionally equivalent to the LZ77 algorithm,
+but it forgoes the sliding window altogether, and instead uses a
+``linked dictionary''. \cite{lz78} As the compressor processes the
+input data, it maintains a matching index to longest prefix already
+stored in the dictionary. If the prefix created by appending the
+current character to the last matched prefix is not found in the
+dictionary, the algorithm stores the character at the next available
+index slot along with a pointer to the index of the original prefix,
+and outputs the index of the longest matching prefix followed by the
+character. Algorithmically, this method is equivalent to LZ77.
 
 The basic method introduced in Lempel and Ziv's original paper is
 vulnerable to some significant drawbacks. For instance, since each
@@ -214,9 +238,9 @@ table; if so, it appends the immediately next character from the input
 to the prefix and queries the string table again. If, on the other
 hand, the appended prefix is \emph{not} found, the algorithm outputs
 the code of the prefix \emph{without} the next character appended (the
-code for which is retrieved from the string table) and then adding the
-appended prefix to the string table. The prefix is set to the last
-character of the prefix and the process repeats.
+code for which is retrieved from the string table) and then adds the
+appended prefix to the string table. The current prefix is finally set
+to the last character of the prefix and the process repeats.
 
 As we can see, the entire algorithm can be succinctly summarized in a
 few sentences and can also be (hopefully) easily understood. This
@@ -238,27 +262,30 @@ used in many compressed file formats.
 
 \subsection{DEFLATE}
 
-Another algorithm based on the Lempel-Ziv foundation is the DEFLATE
-format, codified in RFC 1951. \cite{RFC1951} DEFLATE is not
-``standardized'' by any recognized governing body, though it is very
-widely used and has become a de facto standard by virtue of its use in
-the \texttt{gzip} compression utility, as well as in the ubiquitous
-\texttt{zlib} library. RFC 1951 specifies the technical minutia of the
-implementation of the file format, as well as its algorithm itself. As
-such, it is not useful to describe the full file format within this
-paper, only the algorithm will be outlined.
+An exmaple of an efficient implementation of a compression algorithm
+can be seen in the DEFLATE format, codified in the RFC 1951
+memo. \cite{RFC1951} DEFLATE is not ``standardized'' by any recognized
+governing body, though it is very widely used and has become a de
+facto standard by virtue of its use in the \texttt{gzip} compression
+utility, as well as in the ubiquitous \texttt{zlib} library. RFC 1951
+specifies the technical minutia of the implementation of the file
+format, as well as its algorithm itself. As such, it is not useful to
+describe the full file format within this paper, and so only the
+algorithm will be outlined.
 
-In general, compression proceeds as follows: for a given block of data
-withint the input, the algorithm constructs a Huffman prefix coding
-for the input alphabet. Information about the prefix coding is then
-stored within the output block header, which contains metadata about the
+Briefly, compression proceeds as follows: for a given block of data
+within the input, the algorithm constructs a Huffman prefix coding for
+the input alphabet. Information about the prefix coding is then stored
+within the output block header, which contains metadata about the
 compressed output. DEFLATE supports ``fixed'' and ``dynamic'' Huffman
 codes. Fixed Huffman codes are defined in the DEFLATE specification
 and can be simply hard-coded in the compressor/decompressor
 software. Dynamic Huffman codes, on the other hand, are created by the
 compressor and their information is serialized and stored in the block
 header. The compressed data is then run through an implementation of
-the LZ77 algorithm from earlier.
+the LZ77 algorithm. As such, this combination of prefix coding with a
+powerful compression scheme allows compression tools to squeeze every
+last bit of possible compression out of their data.
 
 DEFLATE allows us to reap the benefits both of the the LZ77 algorithm
 as well as the more basic Huffman prefix coding scheme, all while
@@ -288,12 +315,12 @@ significant lossless compression gains.
 
 The primary means of compression, however, is through model/residual
 coding. For each block of raw input, the FLAC compressor tries to fit
-the signal to a parameterized function, such as a polynomial for
-instance, and then stores the function. It then computes the
-residuals, or the differences between the raw audio signal and the
-parameterized function at each sample. This residual data has a
-particular distribution which is efficiently stored using a specific
-form of Huffman codes, called Rice codes. \cite{flac}
+the signal to a parameterized function, typically a polynomial, and
+then stores the function. It then computes the residuals, or the
+differences between the raw audio signal and the parameterized
+function at each sample. This residual data has a particular
+distribution which is efficiently stored using a specific form of
+Huffman codes, called Rice codes. \cite{flac}
 
 The FLAC specification is of course much more detailed than this
 high-level overview, but a brief description of FLAC's methods is more

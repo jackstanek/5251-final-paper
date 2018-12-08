@@ -22,45 +22,84 @@
   \subsection{Informal Overview}
   \frametitle{What is data compression?}
 
-  A data compression scheme refers to any system for reducing the
-  number of symbols required to represent arbitrary information.
+  Informally, a data compression scheme is some method for reducing
+  the amount of space required to store a given amount of data.
 
-  Some commonplace (possibly lossy!) examples:
+  Some commonplace examples:
 
   \begin{itemize}
-    \item \texttt{*.mp3} files
-    \item \texttt{*.zip} files
-    \item Abbreviations in writing
+  \item \texttt{*.mp3} files
+  \item \texttt{*.zip} files
+  \item Abbreviations in writing
   \end{itemize}
 
-  Clearly, this list is not exhaustive, but it provides an intuition
-  to how these systems function.
+  This brief list includes some lossy methods, though this
+  presentation will cover only lossless methods.
 \end{frame}
 
 \begin{frame}
   \subsection{Theoretical Background}
   Information can be represented as a series of symbols
   \begin{itemize}
-    \item Text is a string of letters in langauge's alphabet
-    \item Numbers are strings of Arabic numerals
+  \item Text is a string of letters in langauge's alphabet
+  \item Numbers are strings of Arabic numerals
   \end{itemize}
   For some alphabet $\Sigma$, the set of all compression schemes
   $C_\Sigma$ is the set of bijections
   $c : \Sigma^n \to \bigcup_{k = 1}^{n} \Sigma^k$ for all
-  $n \in \mathbb{N}$ such that $n \geq 2$. A compression scheme is
-  considered ``perfect'' if and only if its image is the set of all
-  strings of length strictly less than that of the domain.
+  $n \in \mathbb{N}$ such that $n \geq 2$.
 \end{frame}
 
 \begin{frame}
   \subsection{Impossibility of perfect compression}
+  A compression scheme is considered ``perfect'' if and only if its
+  image is the set of all strings of length strictly less than that of
+  the domain.
   \begin{Theorem}
     No perfect compression scheme exists.
   \end{Theorem}
 \end{frame}
 
 \begin{frame}
+  \subsection{Maximum Compressibility of Data}
+  \begin{itemize}
+  \item This result suggests there is a limit to how small compressed
+    data can be.
+  \item Shannon's Noiseless Coding gives a lower bound.
+    \begin{itemize}
+    \item The average word size of a prefix code on a channel is
+      greater than or equal to its entropy.
+    \item Since human data sources are typically very regular
+      (i.e. have low information entropy), data compression methods
+      are able to greatly reduce the sizes of these sorts of data.
+    \end{itemize}
+  \end{itemize}
+\end{frame}
 
+\begin{frame}
+  \section{Lempel-Ziv Based Algorithms}
+  \subsection{LZ}
+  \frametitle{Lempel-Ziv compression algorithms}
+  LZ77 and LZ78 (a.k.a. LZ1 and LZ2, a.k.a. LZ)
+  \begin{itemize}
+  \item Introduced in 1977 and 1978 by Abraham Lempel and Jakob Ziv
+  \item Dictionary block compressor family
+  \item Uses a sliding-window approach
+  \item Produces 3-tuples representing prefixes
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \subsection{LZ77 Example}
+  Suppose we are to encode the tongue-twister ``Can you can a can as a
+  canner can can a can?'' with a window size of 8.
+\end{frame}
+
+\begin{frame}
+  \section{FLAC}
+  \frametitle{Free Lossless Audio Codec}
+  The Free Lossless Audio Codec is a domain-specific compression
+  scheme for hi-fi audio.
 \end{frame}
 
 \end{document}
