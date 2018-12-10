@@ -51,7 +51,7 @@
 \end{frame}
 
 \begin{frame}
-  \subsection{Impossibility of perfect compression}
+  \subsection{Impossibility of Perfect Compression}
   A compression scheme is considered ``perfect'' if and only if its
   image is the set of all strings of length strictly less than that of
   the domain.
@@ -78,7 +78,7 @@
 
 \begin{frame}
   \section{Lempel-Ziv Based Algorithms}
-  \subsection{LZ}
+  \subsection{LZ77 and LZ78}
   \frametitle{Lempel-Ziv compression algorithms}
   LZ77 and LZ78 (a.k.a. LZ1 and LZ2, a.k.a. LZ)
   \begin{itemize}
@@ -91,8 +91,39 @@
 
 \begin{frame}
   \subsection{LZ77 Example}
-  Suppose we are to encode the tongue-twister ``Can you can a can as a
-  canner can can a can?'' with a window size of 8.
+  \frametitle{A Brief Example}
+
+  Suppose we are to encode the word ``hahahahaha'' with a window size
+  of 16.
+\end{frame}
+
+\begin{frame}
+  \frametitle{LZ78}
+  LZ78 is a slightly different modification on the LZ77 algorithm.
+  \begin{itemize}
+  \item Instead of a sliding window, it uses a ``chained dictionary''
+  \item Each entry in the dictionary is a two-tuple: \texttt{(
+      previous prefix index, following character)}
+  \item The dictionary can be represented as a tree data structure
+  \item Equivalent to LZ77 even though it uses a different method
+  \end{itemize}
+\end{frame}
+
+\begin{frame}
+  \subsection{LZW and DEFLATE}
+  \frametitle{Derivative Methods: LZW and DEFLATE}
+
+  Since they are very effective and efficient algorithms, LZ77 and
+  LZ78 have inspired a wide variety of derivative methods.
+
+  \begin{itemize}
+  \item LZW (Lempel-Ziv-Welch): A method based on LZ78 which begins
+    with a pre-populated prefix dictionary, with each individual
+    character in the alphabet.
+  \item DEFLATE: Splits the input into blocks, then encodes the
+    alphabet using a Huffman code, then compresses the resultant input
+    channel using LZ78.
+  \end{itemize}
 \end{frame}
 
 \begin{frame}
@@ -100,6 +131,24 @@
   \frametitle{Free Lossless Audio Codec}
   The Free Lossless Audio Codec is a domain-specific compression
   scheme for hi-fi audio.
+  \begin{enumerate}
+  \item Split input into blocks (can optimize for compression or
+    speed)
+  \item Encode stereo channels (left-right or mid-side)
+  \item Fit the sound signal to an n-degree polynomial (configurable)
+  \item Calculate the residuals (difference between the raw signal and
+    the fit polynomial)
+  \item Encode the residual values using Rice codes (essentially a
+    Huffman coding optimized for alphabets with geometric
+  \end{enumerate}
 \end{frame}
 
+\begin{frame}
+  \section{Question and Answer}
+  \frametitle{Any questions?}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Thank you!}
+\end{frame}
 \end{document}

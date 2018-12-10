@@ -26,6 +26,7 @@
 
 \title{A Review of Lossless Data Compression Methods}
 \author{Jack Stanek}
+\date{December 10, 2018}
 
 \begin{document}
 \maketitle
@@ -121,12 +122,12 @@ compressable, and even uncompressable (since such an input must
 exist!) Since entropy of some channel $X$ with an alphabet $C$ is
 defined to be $H(X) = -\sum_{c \in C} P(c)\log_2{c}$, we can
 illustrate the implications of this result with a simple
-example. Suppose we are attempting to compress a particular channel
-$X$ which is text document in which the frequencies of every letter of
-the Latin alphabet are distributed equally. (It is extremely unlikely
-that a text in any human language would have this property; it is used
-here to illustrate a pathological edge case in general.) Then the
-average word length must be greater than
+example. Suppose we are attempting to compress some arbitrary channel,
+$X$, which is text document in which the frequencies of every letter
+of the Latin alphabet are distributed equally. (It is extremely
+unlikely that a text in any human language would have this property;
+it is used here to illustrate a pathological edge case in general.)
+Then the average word length must be greater than
 $26 * -\frac{1}{26} \log_2{\frac{1}{26}} \approx 4.7$ bits. If we were
 to construct a naïve code to encode the Latin alphabet, for instance
 $A=1, B=2,...$, we would require 5 bits for each letter. Shannon's
@@ -176,17 +177,48 @@ characters in the input data, since there can't be any prefixes in the
 sliding window yet, the encoded form will consist of zero-length
 prefixes followed by the input character literals.)
 
-To illustrate: suppose we are to encode the string ``oodles of
-noodles'' using LZ77, with a window of length 8. The string is 16
-characters long, requiring 16 bytes to store. The current character is
-set to ``o'', the first character of the string. However, since there
-are two ``o'' characters in a row, the algorithm can ``overshoot'' the
-end of the window in order to efficiently implement run-length
-encoding (that is, recording a character and the number of copies
-folloiwng it.) Thus, \texttt{(2, 0, 'o')} is emitted, and the current
-character is incremented by two. The algorithm then emits
-single-character prefix 3-tuples for \texttt{d, l, e, s, ' ',} (the
-space character), \texttt{o}, and \texttt{f}. At
+To illustrate: suppose we want to encode the laughing string
+``hahahahaha'' using the LZ77 algorithm with an 8-character window. We
+would begin by encoding the first two (unique) characters as
+\texttt{(0, 0, 'h')} and \texttt{(0, 0, 'a')}, respectively. Then, the
+rest of the word can be encoded as \texttt{(2, 8, '\textbackslash
+  0')}, where \texttt{'\textbackslash 0'} represents the ASCII null
+character. The resultant output can be stored in 9 bytes, compared to
+the 11 required by the original input string. This example also
+illustrates how the algorithm can use a powerful implementation or
+run-length encoding; LZ77 can represent prefixes which extend past the
+end of the sliding window by ``feeding'' output characters back into
+the decoder, thus allowing repetative cyclic prefixes to be
+represented compactly.
+
+% To illustrate: suppose we are to encode the tongue-twister ``can you
+% can a can as a can man can can a can'' using LZ77, with a window of
+% length 8. The string is 44 characters long, thus requiring 44 bytes to
+% store. In its implementation, the algorithm implicitly holds a
+% windows-worth full of null-character bytes (represented in text as
+% \texttt{\textbackslash 0 or 0x00}) sets the current character to the
+% first character of the input. Since, in this case, the first 7
+% characters of the input are all unique, and as such they cannot be
+% represented by duplicate prefixes from earlier in the text (as there
+% is no ``earlier text'' which matches it.) Thus each of these first
+% bytes is emitted as \texttt{(0, 1, character)}. By this point, the
+% current prefix has advanced to the second space character. Since there
+% is a space less than 8 characters before this, the next character
+% (\texttt{'c'}) is appended to the current prefix. Since the prefix
+% \texttt{' c'} is not found in the window, the algorithm emits
+% \texttt{(4, 1, 'c')}. The next prefix is set to \texttt{'a'} and the
+% process repeats. This time, the prefix \texttt{'an '} can be found in
+% the window, so the algorithm proceeds up to the following \texttt{'c'}
+% and then emits \texttt{(7, 3, 'c')}. The next prefix is set to
+% \texttt{'a'} and the algorithm continues. For brevity, the remaining
+% steps will not be listed, but the compressed version contains 17
+% 3-tuples, requiring 53 bytes to store. This example shows not only
+% that any compression algorithm has incompressable inputs, but also
+% that the design of an algorithm can affect which inputs are
+% incompressable. (In this case, the first few bytes are encoded as
+% three-byte triples, whereas later bytes are encoded as pure
+% prefixes. Since this example is short, the cost incurred by the first
+% bytes is too high to be overcome by the later savings.)
 
 The LZ78 algorithm is functionally equivalent to the LZ77 algorithm,
 but it forgoes the sliding window altogether, and instead uses a
@@ -296,7 +328,7 @@ using a more-or-less standardized file format for easy interchange.
 Since knowing the structure of a given input can allow the
 construction of a more efficient data compression scheme, it is
 worthwhile to study some compression scheme which is specifically
-designed to store a particular type of data. In this secion I will
+designed to store a particular type of data. In this section I will
 describe the structure and function of the Free Lossless Audio Codec,
 known more commonly by its acronym FLAC, a popular format for
 high-fidelity audio storage. \cite{flac}
